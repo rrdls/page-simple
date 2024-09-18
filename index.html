@@ -1,13 +1,41 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Google Drive Integration</title>
+    <title>Drive Integration</title>
     <script src="https://apis.google.com/js/api.js"></script>
-    <script type="text/javascript" src="app.js"></script>
+    <script type="text/javascript">
+      let CLIENT_ID =
+        "806463968374-s68d4qtmctnii0depe6vu13mss7blr81.apps.googleusercontent.com.apps.googleusercontent.com";
+      let API_KEY = "AIzaSyBo1dgqui7u0Vo9OTD5c_b6qpgWTTr9e_I";
+      let SCOPES = "https://www.googleapis.com/auth/drive.file";
+
+      function handleClientLoad() {
+        gapi.load("client:auth2", initClient);
+      }
+
+      function initClient() {
+        gapi.client
+          .init({
+            apiKey: API_KEY,
+            clientId: CLIENT_ID,
+            discoveryDocs: [
+              "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest",
+            ],
+            scope: SCOPES,
+          })
+          .then(
+            function () {
+              console.log("API Initialized");
+            },
+            function (error) {
+              console.error("Error initializing API", error);
+            }
+          );
+      }
+    </script>
   </head>
-  <body>
-    <button id="authorize_button" style="display: none">Authorize</button>
-    <button id="signout_button" style="display: none">Sign Out</button>
-    <pre id="content"></pre>
+  <body onload="handleClientLoad()">
+    <h1>Google Drive Open With Integration</h1>
+    <p>Test your app here!</p>
   </body>
 </html>
