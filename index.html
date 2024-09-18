@@ -1,70 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Meu App</title>
-    <link rel="manifest" href="manifest.json" />
+    <title>Google Drive Integration</title>
     <script src="https://apis.google.com/js/api.js"></script>
-    <script>
-      function handleClientLoad() {
-        // ... (código anterior)
-
-        gapi.client
-          .init({
-            // ... (configurações)
-          })
-          .then(function () {
-            // ... (código anterior)
-
-            // Obtém o ID do arquivo (você pode passar o ID como parâmetro na URL)
-            const fileId = getParameterByName("fileId");
-
-            // Obtém o conteúdo do arquivo
-            gapi.client.drive.files
-              .get({ fileId: fileId, alt: "media" })
-              .then(function (response) {
-                // Exibe o conteúdo em uma div
-                document.getElementById("content").innerText = response.body;
-              });
-          });
-      }
-
-      function getParameterByName(name, url) {
-        // Função auxiliar para obter parâmetros da URL
-        // ...
-      }
-
-      function initClient() {
-        // Configura a autenticação
-        gapi.client
-          .init({
-            apiKey: "AIzaSyBo1dgqui7u0Vo9OTD5c_b6qpgWTTr9e_I",
-            clientId:
-              "806463968374-s68d4qtmctnii0depe6vu13mss7blr81.apps.googleusercontent.com.apps.googleusercontent.com",
-            discoveryDocs: [
-              "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest",
-            ],
-            scope: "https://www.googleapis.com/auth/drive.install",
-          })
-          .then(function () {
-            // Código para lidar com a autenticação e o arquivo recebido
-            gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-            updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-          });
-      }
-
-      function updateSigninStatus(isSignedIn) {
-        if (isSignedIn) {
-          // Usuário está logado, pode processar o arquivo
-          // ...
-        } else {
-          // Usuário não está logado
-        }
-      }
-    </script>
+    <script type="text/javascript" src="app.js"></script>
   </head>
   <body>
-    <div id="content">
-      <h1>Oi</h1>
-    </div>
+    <button id="authorize_button" style="display: none">Authorize</button>
+    <button id="signout_button" style="display: none">Sign Out</button>
+    <pre id="content"></pre>
   </body>
 </html>
