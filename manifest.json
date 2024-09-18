@@ -1,0 +1,14 @@
+{
+  "name": "Meu App",
+  "short_name": "MeuApp",
+  "start_url": "index.html",
+  "display": "standalone",
+  "file_handler": {
+    "action": {
+      "type": "default"
+    },
+    "accept": {
+      "types": ["application/pdf"]
+    }
+  }
+}
