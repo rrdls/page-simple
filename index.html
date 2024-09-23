@@ -2,6 +2,8 @@
 <html>
   <head>
     <title>Drive Integration</title>
+    <!-- Carregando a nova API de Identity -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://apis.google.com/js/api.js"></script>
     <script type="text/javascript">
       let CLIENT_ID =
@@ -9,34 +11,57 @@
       let API_KEY = "AIzaSyBo1dgqui7u0Vo9OTD5c_b6qpgWTTr9e_I";
       let SCOPES =
         "https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.install";
+      let tokenClient;
 
-      function handleClientLoad() {
-        gapi.load("client:auth2", initClient);
-      }
-
+      // Função para inicializar a API Google Identity Services
       function initClient() {
+        // Inicializa o cliente da API
         gapi.client
           .init({
             apiKey: API_KEY,
-            clientId: CLIENT_ID,
             discoveryDocs: [
               "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest",
             ],
-            scope: SCOPES,
           })
-          .then(
-            function () {
-              console.log("API Initialized");
-            },
-            function (error) {
-              console.error("Error initializing API", error);
-            }
-          );
+          .then(() => {
+            console.log("API Google Drive Inicializada");
+          })
+          .catch((error) => {
+            console.error("Erro ao inicializar a API do Google Drive", error);
+          });
+      }
+
+      function handleCredentialResponse(response) {
+        console.log("ID Token recebido: " + response.credential);
+        // Configurar o token de acesso para usar nas chamadas da API do Google
+        gapi.client.setToken({ access_token: response.credential });
+        console.log("Autenticado com sucesso!");
+      }
+
+      function handleClientLoad() {
+        gapi.load("client", initClient); // Inicializa a API do Google Drive
+
+        // Inicializa o cliente para solicitar token de acesso
+        tokenClient = google.accounts.oauth2.initTokenClient({
+          client_id: CLIENT_ID,
+          scope: SCOPES,
+          callback: (tokenResponse) => {
+            gapi.client.setToken(tokenResponse);
+            console.log("Token de acesso obtido:", tokenResponse);
+          },
+        });
+      }
+
+      function authorize() {
+        // Solicitar token de autorização ao clicar
+        tokenClient.requestAccessToken();
       }
     </script>
   </head>
   <body onload="handleClientLoad()">
     <h1>Google Drive Open With Integration</h1>
     <p>Test your app here!</p>
+    <!-- Botão para autorizar o app -->
+    <button onclick="authorize()">Authorize</button>
   </body>
 </html>
